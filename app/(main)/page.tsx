@@ -1,5 +1,6 @@
 import Hero from '@/app/(main)/_components/Hero';
 import EventSection from './_components/EventSection';
+import CTA from './_components/CTA';
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
         url='/events?category=featured'
         totalEvents={3}
       />
+      <CTA />
     </main>
   );
 }
