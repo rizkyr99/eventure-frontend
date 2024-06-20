@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import {
   Calendar,
   Clock,
@@ -6,12 +7,13 @@ import {
   Instagram,
   MapPin,
   Twitter,
-  User,
   User2,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import TicketItem from './_components/TicketItem';
+import TicketModal from './_components/TicketModal';
 
 const EventDetailsPage = () => {
   return (
@@ -64,7 +66,7 @@ const EventDetailsPage = () => {
         </div>
         <div className='space-y-2'>
           <p className='text-2xl font-bold'>Rp 200.000</p>
-          <Button className='w-full'>Buy Ticket</Button>
+          <TicketModal />
         </div>
         <div className='space-y-4'>
           <p className='font-bold'>Share Event</p>
