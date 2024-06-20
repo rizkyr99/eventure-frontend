@@ -74,3 +74,9 @@
     @apply bg-slate-100 text-foreground;
   }
 }
+
+@layer components {
+  .auth-page-card {
+    @apply bg-white p-8 sm:p-12 rounded-3xl w-full max-w-[500px] mb-4;
+  }
+}
