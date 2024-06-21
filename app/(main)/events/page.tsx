@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import React from 'react';
 import Filter from './_components/Filter';
+import Sort from './_components/Sort';
 
 const events: Event[] = [
   {
@@ -148,20 +149,7 @@ const EventsPage = () => {
       <section className='max-w-screen-xl mx-auto'>
         <div className='flex items-center gap-4 justify-between mb-6'>
           <Filter />
-          <div className='flex items-center gap-3'>
-            <div className='bg-white h-10 px-4 rounded-lg flex gap-2 items-center text-sm'>
-              Latest
-              <ChevronDown className='size-4' />
-            </div>
-            <div className='flex bg-slate-200 rounded-lg'>
-              <div className='bg-white size-10 rounded-lg flex gap-2 items-center justify-center text-sm shadow cursor-pointer'>
-                <Grid2X2 className='size-6' />
-              </div>
-              <div className='bg-transparent size-10 rounded-lg flex gap-2 items-center justify-center text-sm cursor-pointer'>
-                <List className='size-6' />
-              </div>
-            </div>
-          </div>
+          <Sort />
         </div>
         <div className='grid grid-cols-3 gap-5'>
           {events.map((event, index) => (
