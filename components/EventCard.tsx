@@ -12,7 +12,7 @@ const EventCard = ({ event }: EventCardProps) => {
   return (
     <Link
       href='/event/slow-move-bazaar'
-      className='bg-white rounded-3xl overflow-hidden shadow-[0_0_8px_rgba(0,0,0,0.03)] hover:shadow-[0_0_24px_rgba(0,0,0,0.1)] cursor-pointer transition'>
+      className='bg-white rounded-3xl overflow-hidden shadow-light hover:shadow-bold cursor-pointer transition'>
       <Image
         src='https://res.cloudinary.com/de7uimbtt/image/upload/f_auto,q_auto/v1/eventure/bxwf6h2iew3js6pto065'
         width={400}
