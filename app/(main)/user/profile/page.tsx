@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Star } from 'lucide-react';
+import { Copy, Star } from 'lucide-react';
 import Image from 'next/image';
 import React from 'react';
 
@@ -25,7 +25,16 @@ const ProfilePage = () => {
             1.080 points
           </div>
         </div>
-        <div className='space-y-4'>
+        <div className='space-y-4 mt-8'>
+          <div>
+            <Label className='block mb-2'>Referral code</Label>
+            <div className='flex justify-between px-4 py-3 text-primary bg-indigo-100 border-2 border-dashed border-primary rounded-2xl'>
+              <p className='text-xl font-bold tracking-widest'>ADX77V8</p>
+              <button>
+                <Copy className='size-4' />
+              </button>
+            </div>
+          </div>
           <div>
             <Label className='block mb-2'>Email</Label>
             <Input placeholder='Enter your email address' />
