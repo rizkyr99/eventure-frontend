@@ -1,5 +1,3 @@
-import { Select, SelectTrigger } from '@/components/ui/select';
-import Image from 'next/image';
 import { DataTable } from './data-table';
 import { columns } from './columns';
 
@@ -10,7 +8,7 @@ type Payment = {
   email: string;
 };
 
-export const payments: Payment[] = [
+const payments: Payment[] = [
   {
     id: '728ed52f',
     amount: 100,

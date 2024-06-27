@@ -1,3 +1,5 @@
+'use client';
+
 import EventCard from '@/components/EventCard';
 import { Event } from '@/types/event';
 import {
@@ -7,9 +9,10 @@ import {
   Grid2X2,
   List,
 } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Filter from './_components/Filter';
 import Sort from './_components/Sort';
+import { useRouter } from 'next/navigation';
 
 const events: Event[] = [
   {
@@ -135,6 +138,27 @@ const events: Event[] = [
 ];
 
 const EventsPage = () => {
+  const [page, setPage] = useState(1);
+  const [data, setData] = useState([]);
+  const router = useRouter();
+
+  const handleNext = () => {
+    setPage((prev) => prev + 1);
+    router.push(`/events?page=${page}`);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch(
+        `https://idn-area.up.railway.app/provinces?page=${page}`
+      );
+      const result = await response.json();
+      setData(result);
+    };
+    fetchData();
+  }, [page]);
+  console.log(data, page);
+
   return (
     <main className='px-4'>
       <section className='py-16'>
@@ -162,7 +186,7 @@ const EventsPage = () => {
             <ChevronLeft className='size-6' />
           </button>
           <button className='size-10 bg-white flex items-center justify-center rounded-lg shadow hover:bg-primary hover:text-white transition'>
-            <ChevronRight className='size-6' />
+            <ChevronRight onClick={handleNext} className='size-6' />
           </button>
         </div>
       </section>

@@ -9,7 +9,7 @@ const Header = () => {
       <h1 className='font-bold'>Dashboard</h1>
       <div className='flex items-center gap-x-6'>
         <Button className='rounded-full' asChild>
-          <Link href='/events/create'>Create Event</Link>
+          <Link href='/organizer/events/create'>Create Event</Link>
         </Button>
         <div className='bg-slate-200 size-12 rounded-full flex items-center justify-center'>
           <User2 className='size-6 text-slate-500' />
