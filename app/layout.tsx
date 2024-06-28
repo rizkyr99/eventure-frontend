@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 import './globals.css';
 import { cn } from '@/lib/utils';
 
@@ -22,6 +23,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={cn(poppins.className, 'bg-slate-100 text-black')}>
         {children}
+        <Toaster />
       </body>
     </html>
   );
