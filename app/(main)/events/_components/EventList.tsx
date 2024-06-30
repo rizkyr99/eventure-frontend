@@ -2,7 +2,6 @@
 
 import EventCard from '@/components/EventCard';
 import { useSearchParams } from 'next/navigation';
-import queryString from 'query-string';
 import { useEffect, useState } from 'react';
 
 const EventList = () => {
@@ -11,13 +10,17 @@ const EventList = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      const queryParams = params.toString();
-      console.log(queryParams);
-      const response = await fetch(
-        `http://localhost:8080/api/v1/events?${queryParams}`
-      );
-      const result = await response.json();
-      setEvents(result);
+      try {
+        const queryParams = params.toString();
+        console.log(queryParams);
+        const response = await fetch(
+          `http://localhost:8080/api/v1/events?${queryParams}`
+        );
+        const result = await response.json();
+        setEvents(result);
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchEvents();
   }, [params]);

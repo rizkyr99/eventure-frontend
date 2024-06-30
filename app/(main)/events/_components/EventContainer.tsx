@@ -5,10 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Event } from '@/types/event';
 import EventList from './EventList';
 
-const EventContainer = async () => {
-  const response = await fetch('http://localhost:8080/api/v1/events');
-  const events = (await response.json()) as Event[];
-
+const EventContainer = () => {
   return (
     <section className='max-w-screen-xl mx-auto'>
       <div className='flex items-center gap-4 justify-between mb-6'>
