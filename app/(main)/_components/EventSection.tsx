@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const events: Event[] = [
   {
-    title: 'Tech Conference 2024',
+    name: 'Tech Conference 2024',
     description: 'A conference about the latest in tech.',
     image: '/images/tech-conference.jpg',
     startDate: '2024-07-15',
@@ -15,7 +15,7 @@ const events: Event[] = [
     isFree: false,
   },
   {
-    title: 'Art Expo 2024',
+    name: 'Art Expo 2024',
     description: 'Showcase of modern art from around the world.',
     image: '/images/art-expo.jpg',
     startDate: '2024-08-01',
@@ -25,7 +25,7 @@ const events: Event[] = [
     isFree: false,
   },
   {
-    title: 'Music Festival',
+    name: 'Music Festival',
     description: 'A festival featuring various music artists.',
     image: '/images/music-festival.jpg',
     startDate: '2024-09-05',
@@ -35,7 +35,7 @@ const events: Event[] = [
     isFree: false,
   },
   {
-    title: 'Marathon 2024',
+    name: 'Marathon 2024',
     description: 'Annual marathon race in Boston.',
     image: '/images/marathon.jpg',
     startDate: '2024-10-12',
@@ -45,7 +45,7 @@ const events: Event[] = [
     isFree: false,
   },
   {
-    title: 'Food Carnival',
+    name: 'Food Carnival',
     description: 'Carnival with a variety of food stalls and events.',
     image: '/images/food-carnival.jpg',
     startDate: '2024-11-20',
@@ -55,7 +55,7 @@ const events: Event[] = [
     isFree: false,
   },
   {
-    title: 'Startup Pitch Day',
+    name: 'Startup Pitch Day',
     description: 'Event where startups pitch their ideas to investors.',
     image: '/images/startup-pitch.jpg',
     startDate: '2024-12-02',
