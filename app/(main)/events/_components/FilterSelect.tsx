@@ -10,11 +10,17 @@ interface FilterSelectProps {
   label: string;
   name: string;
   options: any[];
+  onChange: (value: string) => void;
 }
 
-const FilterSelect = ({ label, name, options }: FilterSelectProps) => {
+const FilterSelect = ({
+  label,
+  name,
+  options,
+  onChange,
+}: FilterSelectProps) => {
   return (
-    <Select>
+    <Select onValueChange={onChange}>
       <SelectTrigger className='border-none w-fit space-x-2'>
         <SelectValue placeholder={label} />
       </SelectTrigger>
@@ -22,7 +28,7 @@ const FilterSelect = ({ label, name, options }: FilterSelectProps) => {
         <SelectItem value='all'>{label}</SelectItem>
         {options.map((option) => (
           <SelectItem key={option.slug} value={option.slug}>
-            {option.label}
+            {option.name}
           </SelectItem>
         ))}
       </SelectContent>

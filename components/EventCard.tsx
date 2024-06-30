@@ -17,12 +17,12 @@ const EventCard = ({ event }: EventCardProps) => {
         src='https://res.cloudinary.com/de7uimbtt/image/upload/f_auto,q_auto/v1/eventure/bxwf6h2iew3js6pto065'
         width={400}
         height={200}
-        alt={event.title}
+        alt={event.name}
         className='w-full object-cover rounded-3xl'
       />
       <div className='px-6 py-4 space-y-4'>
         <div className='space-y-1'>
-          <h3 className='text-xl font-bold'>{event.title}</h3>
+          <h3 className='text-xl font-bold'>{event.name}</h3>
           <div className='flex items-center gap-2 text-slate-500 text-sm'>
             <Calendar className='size-4' />
             {event.startDate}

@@ -1,20 +1,9 @@
-import React from 'react';
-import FilterSelect from './FilterSelect';
+'use client';
 
-const categories = [
-  {
-    label: 'Music & Entertainment',
-    slug: 'music-and-entertainment',
-  },
-  {
-    label: 'Food & Drink',
-    slug: 'food-and-drink',
-  },
-  {
-    label: 'Business',
-    slug: 'business',
-  },
-];
+import { useEffect, useState } from 'react';
+import FilterSelect from './FilterSelect';
+import { useRouter, useSearchParams } from 'next/navigation';
+import queryString from 'query-string';
 
 const locations = [
   {
@@ -43,15 +32,70 @@ const freeOptions = [
 ];
 
 const Filter = () => {
+  const [filters, setFilters] = useState({
+    category: 'all',
+    location: 'all',
+    price: 'all',
+  });
+
+  const [categories, setCategories] = useState([]);
+  const params = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/v1/categories');
+        const result = await response.json();
+        setCategories(result);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const handleChange = (name: string, value: string) => {
+    const currentQuery = queryString.parse(params.toString());
+
+    if (value === 'all') {
+      delete currentQuery[name];
+    } else {
+      currentQuery[name] = value;
+    }
+
+    const url = queryString.stringifyUrl(
+      {
+        url: '/events',
+        query: currentQuery,
+      },
+      {
+        skipNull: true,
+      }
+    );
+    router.push(url);
+  };
+
   return (
     <div className='flex items-center gap-3'>
       <FilterSelect
         label='All Categories'
         name='category'
         options={categories}
+        onChange={(value) => handleChange('category', value)}
       />
-      <FilterSelect label='All Locations' name='category' options={locations} />
-      <FilterSelect label='Free + Paid' name='free' options={freeOptions} />
+      <FilterSelect
+        label='All Locations'
+        name='location'
+        options={locations}
+        onChange={(value) => handleChange('location', value)}
+      />
+      <FilterSelect
+        label='Free + Paid'
+        name='price'
+        options={freeOptions}
+        onChange={(value) => handleChange('price', value)}
+      />
     </div>
   );
 };
