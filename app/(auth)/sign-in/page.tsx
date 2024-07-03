@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
+import { authenticate } from '@/actions/auth';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -35,30 +36,7 @@ const SignIn = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(values),
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        toast.success('Successfully signed in');
-        const data = await response.json();
-        console.log(data);
-        const payload = jwt.decode(data.token) as JwtPayload;
-        console.log(payload.role);
-
-        if (payload.role === 'ATTENDEE') {
-          router.push('/user');
-        } else if (payload.role === 'ORGANIZER') {
-          router.push('/organizer');
-        }
-      } else {
-        toast.error('Error');
-      }
+      await authenticate(values);
     } catch (error) {
       toast.error('Error');
       console.log(error);

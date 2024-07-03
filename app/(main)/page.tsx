@@ -1,8 +1,11 @@
 import Hero from '@/app/(main)/_components/Hero';
 import EventSection from './_components/EventSection';
 import CTA from './_components/CTA';
+import { auth } from '@/auth';
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+  console.log(session);
   return (
     <main className='space-y-16'>
       <Hero />

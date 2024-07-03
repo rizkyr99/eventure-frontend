@@ -1,21 +1,29 @@
-import { NextRequest } from 'next/server';
+import { auth } from '@/auth';
+import { NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
-  let sid = request.cookies.get('sid')?.value;
-
+export default auth((req) => {
   if (
-    sid &&
-    (request.nextUrl.pathname.startsWith('/sign-in') ||
-      request.nextUrl.pathname.startsWith('/sign-up'))
+    !req.auth &&
+    (req.nextUrl.pathname.startsWith('/user') ||
+      req.nextUrl.pathname.startsWith('/organizer'))
   ) {
-    return Response.redirect(new URL('/user/profile', request.url));
+    const newUrl = new URL('/sign-in', req.nextUrl.origin);
+    return NextResponse.redirect(newUrl);
   }
 
   if (
-    !sid &&
-    (request.nextUrl.pathname.startsWith('/user') ||
-      request.nextUrl.pathname.startsWith('/organizer'))
+    req.auth?.user.role === 'ORGANIZER' &&
+    req.nextUrl.pathname.startsWith('/user')
   ) {
-    return Response.redirect(new URL('/sign-in', request.url));
+    const newUrl = new URL('/', req.nextUrl.origin);
+    return NextResponse.redirect(newUrl);
   }
-}
+
+  if (
+    req.auth?.user.role === 'ATTENDEE' &&
+    req.nextUrl.pathname.startsWith('/organizer')
+  ) {
+    const newUrl = new URL('/', req.nextUrl.origin);
+    return NextResponse.redirect(newUrl);
+  }
+});
