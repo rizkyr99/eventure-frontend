@@ -1,6 +1,5 @@
 'use client';
 
-import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Button } from '@/components/ui/button';
 import {
   Form,

@@ -3,7 +3,8 @@ import Link from 'next/link';
 import React from 'react';
 import Search from './Search';
 import { auth } from '@/auth';
-import { User, User2 } from 'lucide-react';
+
+import HeaderDropdown from './HeaderDropdown';
 
 const Header = async () => {
   const session = await auth();
@@ -22,12 +23,11 @@ const Header = async () => {
             Create Event
           </Link>
           {session ? (
-            <div className='flex items-center gap-2'>
-              <div className='text-sm'>{session.user.name}</div>
-              <div className='size-12 bg-slate-200 rounded-full flex items-center justify-center cursor-pointer'>
-                <User2 className='size-6 text-slate-500' />
-              </div>
-            </div>
+            <HeaderDropdown
+              name={session.user.name}
+              email={session.user.email}
+              role={session.user.role}
+            />
           ) : (
             <>
               <Link
