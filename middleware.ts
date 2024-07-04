@@ -12,6 +12,14 @@ export default auth((req) => {
   }
 
   if (
+    req.auth &&
+    (req.nextUrl.pathname === '/sign-in' || req.nextUrl.pathname === '/sign-up')
+  ) {
+    const newUrl = new URL('/', req.nextUrl.origin);
+    return NextResponse.redirect(newUrl);
+  }
+
+  if (
     req.auth?.user.role === 'ORGANIZER' &&
     req.nextUrl.pathname.startsWith('/user')
   ) {

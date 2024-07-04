@@ -44,7 +44,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     authorized: async ({ auth }) => {
-      return false;
+      return !!auth;
     },
     session: async ({ token, session }) => {
       if (token.sub && session.user) {
@@ -59,11 +59,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     jwt: async ({ token, user }) => {
       if (user) token.role = user.role;
+      console.log(token);
       return token;
     },
   },
-  session: { strategy: 'jwt' },
+  session: { strategy: 'jwt', maxAge: 60 * 60 * 1 },
   pages: {
     signIn: '/sign-in',
+  },
+  jwt: {
+    maxAge: 60 * 60 * 1,
   },
 });
