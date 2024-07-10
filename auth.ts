@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import { cookies } from 'next/headers';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: true,
@@ -27,6 +28,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
 
           const { data } = await response.json();
+
+          const cookieStore = cookies();
+          cookieStore.set('sid', data.token);
 
           return {
             id: data.id,
@@ -69,5 +73,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   jwt: {
     maxAge: 60 * 60 * 1,
+  },
+  cookies: {
+    sessionToken: {
+      name: `session-jwt`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+      },
+    },
   },
 });
