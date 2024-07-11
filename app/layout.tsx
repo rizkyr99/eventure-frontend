@@ -3,6 +3,7 @@ import { Poppins } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import './globals.css';
 import { cn } from '@/lib/utils';
+import Providers from './providers';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -22,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={cn(poppins.className, 'bg-slate-100 text-black')}>
-        {children}
+        <Providers>{children}</Providers>
         <Toaster />
       </body>
     </html>

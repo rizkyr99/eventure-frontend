@@ -1,10 +1,14 @@
-export interface Event {
+export interface EventSummary {
+  id: number;
   name: string;
-  description: string;
+  slug: string;
   image: string;
   startDate: string;
   endDate: string;
-  price: number;
+  startTime: string;
+  endTime: string;
   location: string;
   isFree: boolean;
+  category: string;
+  lowestPrice: number;
 }

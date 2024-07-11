@@ -1,5 +1,3 @@
-'use client';
-
 import Filter from './Filter';
 import Sort from './Sort';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
