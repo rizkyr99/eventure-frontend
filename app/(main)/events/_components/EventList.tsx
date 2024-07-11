@@ -1,7 +1,6 @@
 'use client';
 
 import EventCard from '@/components/EventCard';
-import { useSearchParams } from 'next/navigation';
 import { useEvent } from '@/hooks/useEvent';
 
 const EventList = () => {
