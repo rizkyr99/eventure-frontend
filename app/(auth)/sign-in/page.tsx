@@ -31,7 +31,6 @@ const SignIn = () => {
       password: '',
     },
   });
-  const router = useRouter();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {

@@ -12,17 +12,18 @@ import Link from 'next/link';
 import React from 'react';
 import TicketModal from './_components/TicketModal';
 import moment from 'moment';
+import { fetchEventDetails } from '@/actions/event';
 
 const EventDetailsPage = async ({
   params,
 }: {
   params: { eventSlug: string };
 }) => {
-  const response = await fetch(
-    `http://localhost:8080/api/v1/events/slug/${params.eventSlug}`
-  );
-  const result = await response.json();
-  const event = result.data;
+  const event = await fetchEventDetails(params.eventSlug);
+
+  if (!event) {
+    return <div>Event not found</div>;
+  }
 
   return (
     <main className='my-12 grid grid-cols-3 max-w-screen-xl mx-auto gap-6 min-h-screen'>
@@ -46,7 +47,7 @@ const EventDetailsPage = async ({
             <div className='bg-slate-200 size-16 rounded-full flex items-center justify-center'>
               <User2 className='size-8 text-slate-500' />
             </div>
-            {event.organizer}
+            {event.organizer.name}
           </div>
         </div>
       </div>
