@@ -57,6 +57,8 @@ const CreateTicketModal = ({
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     append(values);
+    onClose();
+    form.reset();
   };
 
   return (

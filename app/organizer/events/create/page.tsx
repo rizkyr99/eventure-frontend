@@ -34,10 +34,12 @@ import React, { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import CreateTicketModal from './_components/CreateTicketModal';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const formSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
   category: z.string().min(1, 'Category is required'),
+  isFree: z.boolean(),
   image: z.any().refine((file) => file.length > 0, 'Image is required'),
   startDate: z.string().min(1, 'Start date is required'),
   endDate: z.string().min(1, 'End date is required'),
@@ -47,13 +49,15 @@ const formSchema = z.object({
   description: z
     .string()
     .min(20, 'Description must be at least 20 characters long'),
-  ticketTypes: z.array(
-    z.object({
-      name: z.string().min(1, 'Name is required'),
-      price: z.number().min(1, 'Price is required'),
-      quantity: z.number().min(1, 'Quantity is required'),
-    })
-  ),
+  ticketTypes: z
+    .array(
+      z.object({
+        name: z.string().min(1, 'Name is required'),
+        price: z.number().min(1, 'Price is required'),
+        quantity: z.number().min(1, 'Quantity is required'),
+      })
+    )
+    .optional(),
 });
 
 const CreateEventPage = () => {
@@ -68,6 +72,7 @@ const CreateEventPage = () => {
     defaultValues: {
       name: '',
       category: '',
+      isFree: false,
       image: '',
       startDate: '',
       endDate: '',
@@ -122,7 +127,9 @@ const CreateEventPage = () => {
                   <FormItem>
                     <FormLabel>Category</FormLabel>
                     <FormControl>
-                      <Select {...field}>
+                      <Select
+                        defaultValue={field.value}
+                        onValueChange={field.onChange}>
                         <SelectTrigger>
                           <SelectValue placeholder='Select category' />
                         </SelectTrigger>
@@ -138,6 +145,22 @@ const CreateEventPage = () => {
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name='isFree'
+              render={({ field }) => (
+                <FormItem className='flex items-center space-x-2'>
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormLabel>Is Free</FormLabel>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div>
               <FormField
                 control={form.control}
@@ -158,7 +181,7 @@ const CreateEventPage = () => {
               <p className='text-slate-500'>Upload the event&apos;s image</p>
             </div> */}
             </div>
-            <div className='grid grid-cols-4 gap-x-6'>
+            <div className='grid grid-cols-2 xl:grid-cols-4 gap-x-6'>
               <FormField
                 control={form.control}
                 name='startDate'
@@ -205,7 +228,7 @@ const CreateEventPage = () => {
                   <FormItem>
                     <FormLabel>End Time</FormLabel>
                     <FormControl>
-                      <Input type='date' {...field} />
+                      <Input type='time' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -252,6 +275,7 @@ const CreateEventPage = () => {
                 type='button'
                 onClick={() => setModalOpen(true)}
                 size='sm'
+                disabled={form.getValues('isFree')}
                 className='text-sm'>
                 Add Ticket
               </Button>
