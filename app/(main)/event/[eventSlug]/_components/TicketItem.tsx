@@ -1,9 +1,14 @@
 'use client';
 
+import { formatToIDR } from '@/lib/formatToIDR';
 import { Minus, Plus } from 'lucide-react';
 import { useState } from 'react';
 
-const TicketItem = () => {
+interface TicketItemProps {
+  ticket: any;
+}
+
+const TicketItem = ({ ticket }: TicketItemProps) => {
   const [quantity, setQuantity] = useState(1);
 
   const handleAddQuantity = () => {
@@ -18,11 +23,11 @@ const TicketItem = () => {
     <div className='bg-white p-6 rounded-2xl border border-slate-200'>
       <div className='flex justify-between items-start'>
         <div>
-          <p className='mb-1'>VIP A</p>
-          <p className='text-slate-500 text-xs mb-4'>
+          <p className='mb-1'>{ticket.name}</p>
+          {/* <p className='text-slate-500 text-xs mb-4'>
             Sales ends on Jul 20, 2024
-          </p>
-          <p className='font-bold'>Rp 1.200.000</p>
+          </p> */}
+          <p className='font-bold'>{formatToIDR(ticket.price)}</p>
         </div>
         <div className='flex items-center gap-4'>
           <button

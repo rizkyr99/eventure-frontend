@@ -1,10 +1,31 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import React from 'react';
+import { useEffect, useState } from 'react';
 import TicketItem from './TicketItem';
 import Image from 'next/image';
 
-const TicketModal = () => {
+interface TicketModalProps {
+  eventId: number;
+}
+
+const TicketModal = ({ eventId }: TicketModalProps) => {
+  const [tickets, setTickets] = useState([]);
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      const response = await fetch(
+        `http://localhost:8080/api/v1/events/${eventId}/tickets`
+      );
+      const result = await response.json();
+      setTickets(result.data);
+    };
+    fetchTickets();
+  }, [eventId]);
+
+  console.log(tickets);
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -20,8 +41,8 @@ const TicketModal = () => {
             className='w-full object-cover rounded-2xl sm:hidden mb-4'
           />
           <div className='space-y-4 flex-1 overflow-y-auto pb-6'>
-            {[12, 3, 1].map((_, index) => (
-              <TicketItem key={index} />
+            {tickets.map((ticket, index) => (
+              <TicketItem key={index} ticket={ticket} />
             ))}
           </div>
           <div className='space-y-4'>
