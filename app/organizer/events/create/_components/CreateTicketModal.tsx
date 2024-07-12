@@ -1,0 +1,131 @@
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+interface CreateTicketModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  append: ({
+    name,
+    price,
+    quantity,
+  }: {
+    name: string;
+    price: number;
+    quantity: number;
+  }) => void;
+}
+
+const formSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  price: z.coerce.number().gte(1, 'Price must be greater than or equal to 1'),
+  quantity: z.coerce
+    .number()
+    .gte(1, 'Quantity must be greater than or equal to 1'),
+});
+
+const CreateTicketModal = ({
+  isOpen,
+  onClose,
+  append,
+}: CreateTicketModalProps) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    defaultValues: {
+      name: '',
+      price: 0,
+      quantity: 1,
+    },
+    resolver: zodResolver(formSchema),
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    append(values);
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogTrigger asChild>
+        <Button size='sm' className='text-sm'>
+          Add Ticket
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <DialogHeader>Create New Ticket</DialogHeader>
+            <div className='space-y-4'>
+              <FormField
+                control={form.control}
+                name='name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder='Ticket Name' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='price'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        placeholder='Ticket Price'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='quantity'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        placeholder='Ticket Quantity'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter>
+              <Button size='sm' type='submit' className='mt-4'>
+                Submit
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default CreateTicketModal;
