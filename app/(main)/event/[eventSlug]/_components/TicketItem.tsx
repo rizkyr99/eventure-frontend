@@ -9,7 +9,7 @@ interface TicketItemProps {
 }
 
 const TicketItem = ({ ticket }: TicketItemProps) => {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
 
   const handleAddQuantity = () => {
     setQuantity((prev) => prev + 1);
@@ -32,14 +32,14 @@ const TicketItem = ({ ticket }: TicketItemProps) => {
         <div className='flex items-center gap-4'>
           <button
             onClick={handleReduceQuantity}
-            disabled={quantity <= 1}
+            disabled={quantity <= 0}
             className='group p-1 rounded-lg bg-primary hover:opacity-75 transition disabled:bg-slate-200 disabled:hover:opacity-100'>
             <Minus className='size-5 text-white group-disabled:text-slate-500' />
           </button>
           <div className='min-w-4 flex justify-center'>{quantity}</div>
           <button
             onClick={handleAddQuantity}
-            disabled={quantity >= 10}
+            disabled={quantity >= 4}
             className='group p-1 rounded-lg bg-primary hover:opacity-75 transition disabled:bg-slate-200 disabled:hover:opacity-100'>
             <Plus className='size-5 text-white group-disabled:text-slate-500' />
           </button>
