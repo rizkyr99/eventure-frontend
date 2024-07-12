@@ -2,9 +2,14 @@
 
 import EventCard from '@/components/EventCard';
 import { useEvent } from '@/hooks/useEvent';
+import EventListLoader from './EventListLoader';
 
 const EventList = () => {
-  const { events } = useEvent();
+  const { events, isLoading, error } = useEvent();
+
+  if (isLoading) {
+    return <EventListLoader />;
+  }
 
   return (
     <div className='grid grid-cols-3 gap-5'>

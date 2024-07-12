@@ -16,10 +16,14 @@ export const useEvent = () => {
   const searchParams = useSearchParams();
   const queryString = searchParams.toString();
 
-  const { data: events } = useQuery({
+  const {
+    data: events,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['events', queryString],
     queryFn: () => fetchEvents(queryString),
   });
 
-  return { events };
+  return { events, isLoading, error };
 };
