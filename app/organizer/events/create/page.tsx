@@ -28,14 +28,14 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import CreateTicketModal from './_components/CreateTicketModal';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useCategories } from '@/hooks/useCategories';
+import toast from 'react-hot-toast';
 
 const formSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
   category: z.string().min(1, 'Category is required'),
   isFree: z.boolean(),
-  image: z
-    .instanceof(File)
-    .refine((file) => file?.size > 0, 'Image is required'),
+  image: z.any().refine((file) => file?.length > 0, 'Image is required'),
   startDate: z.string().min(1, 'Start date is required'),
   endDate: z.string().min(1, 'End date is required'),
   startTime: z.string().min(1, 'Start time is required'),
@@ -57,7 +57,7 @@ const formSchema = z.object({
 
 const CreateEventPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const { categories } = useCategories();
 
   const handleModalClose = () => {
     setModalOpen(false);
@@ -85,19 +85,12 @@ const CreateEventPage = () => {
     name: 'ticketTypes',
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setSelectedImage(e.target.files[0]);
-      form.setValue('image', e.target.files[0]);
-    }
-  };
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const formData = new FormData();
       formData.append('name', values.name);
       formData.append('category', values.category);
-      formData.append('image', values.image as File);
+      formData.append('image', values.image[0] as File);
       formData.append('location', values.location);
       formData.append('description', values.description);
       formData.append('startDate', values.startDate);
@@ -112,18 +105,28 @@ const CreateEventPage = () => {
       if (values.ticketTypes) {
         values.ticketTypes.forEach((ticketType, index) => {
           formData.append(`ticketTypes[${index}].name`, ticketType.name);
+          formData.append(
+            `ticketTypes[${index}].price`,
+            ticketType.price.toString()
+          );
+          formData.append(
+            `ticketTypes[${index}].quantity`,
+            ticketType.quantity.toString()
+          );
         });
       }
-      console.log(formData);
-      // console.log(values);
 
       const response = await fetch('http://localhost:8080/api/v1/events', {
         method: 'POST',
         body: formData,
         credentials: 'include',
       });
-    } catch (error) {
-      console.log(error);
+      if (!response.ok) {
+        const result = await response.json();
+        throw new Error(result.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
@@ -166,9 +169,13 @@ const CreateEventPage = () => {
                           <SelectValue placeholder='Select category' />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value='1'>Category 1</SelectItem>
-                          <SelectItem value='2'>Category 2</SelectItem>
-                          <SelectItem value='3'>Category 3</SelectItem>
+                          {categories.map((category) => (
+                            <SelectItem
+                              key={category.id}
+                              value={String(category.id)}>
+                              {category.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -204,7 +211,7 @@ const CreateEventPage = () => {
                       <Input
                         type='file'
                         accept='image/*'
-                        onChange={handleImageChange}
+                        onChange={(e) => field.onChange(e.target.files)}
                       />
                     </FormControl>
                     <FormMessage />

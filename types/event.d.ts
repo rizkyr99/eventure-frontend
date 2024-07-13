@@ -28,6 +28,12 @@ export interface EventDetails {
   organizer: Organizer;
 }
 
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
+
 export interface Organizer {
   id: number;
   name: string;
