@@ -247,7 +247,7 @@ const CreateEventPage = () => {
                   <FormItem>
                     <FormLabel>Location</FormLabel>
                     <FormControl>
-                      <Combobox />
+                      <Combobox value={field.value} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

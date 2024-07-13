@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useState } from 'react';
 import { Check, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -42,9 +42,13 @@ const frameworks = [
   },
 ];
 
-const Combobox = () => {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState('');
+interface ComboboxProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+const Combobox = ({ value, onChange }: ComboboxProps) => {
+  const [open, setOpen] = useState(false);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -53,7 +57,7 @@ const Combobox = () => {
           variant='outline'
           role='combobox'
           aria-expanded={open}
-          className='w-full justify-between h-10 rounded-xl text-base px-3 py-1 text-sm'>
+          className='w-full justify-between h-10 rounded-xl px-3 py-1 text-sm'>
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
             : 'Select framework...'}
@@ -72,10 +76,7 @@ const Combobox = () => {
                 <CommandItem
                   key={framework.value}
                   value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? '' : currentValue);
-                    setOpen(false);
-                  }}>
+                  onSelect={onChange}>
                   <Check
                     className={cn(
                       'mr-2 h-4 w-4',

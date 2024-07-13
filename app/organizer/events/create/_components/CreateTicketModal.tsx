@@ -63,11 +63,6 @@ const CreateTicketModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogTrigger asChild>
-        <Button size='sm' className='text-sm'>
-          Add Ticket
-        </Button>
-      </DialogTrigger>
       <DialogContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
