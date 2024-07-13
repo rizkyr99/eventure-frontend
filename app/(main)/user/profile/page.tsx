@@ -79,12 +79,12 @@ const ProfilePage = () => {
             </div>
             <div>
               <Label className='block mb-2'>Province</Label>
-              <Combobox />
+              <Input />
             </div>
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               <div>
                 <Label className='block mb-2'>City</Label>
-                <Combobox />
+                <Input />
               </div>
               <div>
                 <Label className='block mb-2'>Zip Code</Label>
