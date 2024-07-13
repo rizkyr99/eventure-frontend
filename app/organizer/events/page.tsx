@@ -1,5 +1,12 @@
+'use client';
+
 import { DataTable } from './data-table';
 import { columns } from './columns';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useOrganizerEvents } from '@/hooks/useOrganizerEvents';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Loader2 } from 'lucide-react';
 
 type Payment = {
   id: string;
@@ -8,92 +15,19 @@ type Payment = {
   email: string;
 };
 
-const payments: Payment[] = [
-  {
-    id: '728ed52f',
-    amount: 100,
-    status: 'pending',
-    email: 'm@example.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-  {
-    id: '489e1d42',
-    amount: 125,
-    status: 'processing',
-    email: 'example@gmail.com',
-  },
-];
-
 const OrganizerEventsPage = () => {
+  const { events, isLoading, error } = useOrganizerEvents();
+
   return (
     <div className='p-4'>
       <div className='bg-white p-6 rounded-3xl shadow-light'>
-        <DataTable columns={columns} data={payments} />
+        {isLoading && !events ? (
+          <div className='h-64 flex items-center justify-center'>
+            <Loader2 className='size-6 animate-spin' />
+          </div>
+        ) : (
+          events && <DataTable columns={columns} data={events} />
+        )}
       </div>
     </div>
   );

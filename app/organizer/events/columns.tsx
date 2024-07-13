@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { EventSummary } from '@/types/event';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 
@@ -13,26 +14,39 @@ export type Payment = {
   email: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<EventSummary>[] = [
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'name',
+    header: 'Event Name',
   },
   {
-    accessorKey: 'email',
-    header: 'Email',
-  },
-  {
-    accessorKey: 'amount',
+    accessorKey: 'startDate',
     header: ({ column }) => {
       return (
         <Button
           variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Amount
+          End Date
           <ArrowUpDown className='size-4 ml-2' />
         </Button>
       );
     },
+  },
+  {
+    accessorKey: 'endDate',
+    header: ({ column }) => {
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          End Date
+          <ArrowUpDown className='size-4 ml-2' />
+        </Button>
+      );
+    },
+  },
+  {
+    accessorKey: '',
+    header: 'Actions',
   },
 ];
