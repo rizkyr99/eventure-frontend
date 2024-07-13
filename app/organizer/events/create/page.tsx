@@ -30,6 +30,7 @@ import CreateTicketModal from './_components/CreateTicketModal';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useCategories } from '@/hooks/useCategories';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
@@ -58,6 +59,7 @@ const formSchema = z.object({
 const CreateEventPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const { categories } = useCategories();
+  const router = useRouter();
 
   const handleModalClose = () => {
     setModalOpen(false);
@@ -121,10 +123,12 @@ const CreateEventPage = () => {
         body: formData,
         credentials: 'include',
       });
+      const result = await response.json();
       if (!response.ok) {
-        const result = await response.json();
         throw new Error(result.message);
       }
+      toast.success(result.message);
+      router.push('/organizer/events');
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -352,7 +356,7 @@ const CreateEventPage = () => {
             </div>
           </div>
           <div className='col-span-2 flex justify-end'>
-            <Button>Publish</Button>
+            <Button disabled={form.formState.isSubmitting}>Publish</Button>
           </div>
         </form>
       </Form>
