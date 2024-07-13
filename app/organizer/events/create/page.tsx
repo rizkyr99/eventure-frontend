@@ -2,13 +2,7 @@
 
 import Combobox from '@/components/Combobox';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+
 import {
   Form,
   FormControl,
@@ -18,7 +12,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -40,7 +33,9 @@ const formSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
   category: z.string().min(1, 'Category is required'),
   isFree: z.boolean(),
-  image: z.any().refine((file) => file.length > 0, 'Image is required'),
+  image: z
+    .instanceof(File)
+    .refine((file) => file?.size > 0, 'Image is required'),
   startDate: z.string().min(1, 'Start date is required'),
   endDate: z.string().min(1, 'End date is required'),
   startTime: z.string().min(1, 'Start time is required'),
@@ -62,6 +57,7 @@ const formSchema = z.object({
 
 const CreateEventPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const handleModalClose = () => {
     setModalOpen(false);
@@ -73,7 +69,7 @@ const CreateEventPage = () => {
       name: '',
       category: '',
       isFree: false,
-      image: '',
+      image: undefined,
       startDate: '',
       endDate: '',
       startTime: '',
@@ -89,10 +85,46 @@ const CreateEventPage = () => {
     name: 'ticketTypes',
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    const formData = new FormData();
-    formData.append('name', values.name);
-    console.log(formData);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedImage(e.target.files[0]);
+      form.setValue('image', e.target.files[0]);
+    }
+  };
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const formData = new FormData();
+      formData.append('name', values.name);
+      formData.append('category', values.category);
+      formData.append('image', values.image as File);
+      formData.append('location', values.location);
+      formData.append('description', values.description);
+      formData.append('startDate', values.startDate);
+      formData.append('startTime', values.startTime);
+      formData.append('endDate', values.endDate);
+      formData.append('endTime', values.endTime);
+      formData.append('isFree', values.isFree.toString());
+      formData.append(
+        'slug',
+        values.name.toLowerCase().replace(/\s/g, '-') + '-' + Date.now()
+      );
+      if (values.ticketTypes) {
+        values.ticketTypes.forEach((ticketType, index) => {
+          formData.append(`ticketTypes[${index}].name`, ticketType.name);
+        });
+      }
+      console.log(formData);
+      // console.log(values);
+
+      const response = await fetch('http://localhost:8080/api/v1/events', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -169,7 +201,11 @@ const CreateEventPage = () => {
                   <FormItem>
                     <FormLabel>Image</FormLabel>
                     <FormControl>
-                      <Input type='file' {...field} />
+                      <Input
+                        type='file'
+                        accept='image/*'
+                        onChange={handleImageChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
