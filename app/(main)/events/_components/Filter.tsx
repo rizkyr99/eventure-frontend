@@ -8,12 +8,12 @@ import LocationSelect from './LocationSelect';
 
 const freeOptions = [
   {
-    label: 'Free',
-    slug: 'music-and-entertainment',
+    name: 'Free',
+    slug: 'true',
   },
   {
-    label: 'Paid',
-    slug: 'food-and-drink',
+    name: 'Paid',
+    slug: 'false',
   },
 ];
 
