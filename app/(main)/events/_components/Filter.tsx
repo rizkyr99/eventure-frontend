@@ -4,21 +4,7 @@ import { useEffect, useState } from 'react';
 import FilterSelect from './FilterSelect';
 import { useRouter, useSearchParams } from 'next/navigation';
 import queryString from 'query-string';
-
-const locations = [
-  {
-    label: 'Jakarta',
-    slug: 'music-and-entertainment',
-  },
-  {
-    label: 'Bandung',
-    slug: 'food-and-drink',
-  },
-  {
-    label: 'Batam',
-    slug: 'business',
-  },
-];
+import LocationSelect from './LocationSelect';
 
 const freeOptions = [
   {
@@ -32,13 +18,8 @@ const freeOptions = [
 ];
 
 const Filter = () => {
-  const [filters, setFilters] = useState({
-    category: 'all',
-    location: 'all',
-    price: 'all',
-  });
-
   const [categories, setCategories] = useState([]);
+  const [locations, setLocations] = useState([]);
   const params = useSearchParams();
   const router = useRouter();
 
@@ -53,6 +34,19 @@ const Filter = () => {
       }
     };
     fetchCategories();
+    const fetchLocations = async () => {
+      try {
+        const response = await fetch(
+          'http://localhost:8080/api/v1/locations/regencies'
+        );
+        const result = await response.json();
+        console.log(result.data);
+        setLocations(result.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchLocations();
   }, []);
 
   const handleChange = (name: string, value: string) => {
@@ -84,17 +78,12 @@ const Filter = () => {
         options={categories}
         onChange={(value) => handleChange('category', value)}
       />
-      <FilterSelect
-        label='All Locations'
-        name='location'
-        options={locations}
-        onChange={(value) => handleChange('location', value)}
-      />
+      <LocationSelect />
       <FilterSelect
         label='Free + Paid'
-        name='price'
+        name='isFree'
         options={freeOptions}
-        onChange={(value) => handleChange('price', value)}
+        onChange={(value) => handleChange('isFree', value)}
       />
     </div>
   );

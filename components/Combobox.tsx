@@ -43,11 +43,20 @@ const frameworks = [
 ];
 
 interface ComboboxProps {
+  label: string;
+  options: any[];
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 }
 
-const Combobox = ({ value, onChange }: ComboboxProps) => {
+const Combobox = ({
+  label,
+  options,
+  value,
+  onChange,
+  className,
+}: ComboboxProps) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -57,10 +66,10 @@ const Combobox = ({ value, onChange }: ComboboxProps) => {
           variant='outline'
           role='combobox'
           aria-expanded={open}
-          className='w-full justify-between h-10 rounded-xl px-3 py-1 text-sm'>
+          className={`w-full justify-between h-10 rounded-xl px-3 py-1 text-sm ${className}`}>
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
-            : 'Select framework...'}
+            : label}
           <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
@@ -72,18 +81,18 @@ const Combobox = ({ value, onChange }: ComboboxProps) => {
           <CommandList>
             <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {options.map((option) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
+                  key={option.value}
+                  value={option.value}
                   onSelect={onChange}>
                   <Check
                     className={cn(
                       'mr-2 h-4 w-4',
-                      value === framework.value ? 'opacity-100' : 'opacity-0'
+                      value === option.value ? 'opacity-100' : 'opacity-0'
                     )}
                   />
-                  {framework.label}
+                  {option.name}
                 </CommandItem>
               ))}
             </CommandGroup>
