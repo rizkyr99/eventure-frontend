@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import useDebounce from '@/hooks/useDebounce';
+import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 
 interface Option {
@@ -17,7 +18,11 @@ interface Option {
   name: string;
 }
 
-const LocationSelect = () => {
+interface LocationSelectProps {
+  onChange: (value: string) => void;
+}
+
+const LocationSelect = ({ onChange }: LocationSelectProps) => {
   const [options, setOptions] = useState<Option[]>([]);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
@@ -48,13 +53,20 @@ const LocationSelect = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-64'>
-        <DropdownMenuLabel>
+        <div className='relative'>
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder='Search location'
           />
-        </DropdownMenuLabel>
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              className='hover:bg-slate-100 p-1 rounded-full absolute top-1/2 -translate-y-1/2 right-2'>
+              <X className='size-4 text-slate-500' />
+            </button>
+          )}
+        </div>
 
         {options.length > 0 ? (
           <div>
@@ -69,7 +81,7 @@ const LocationSelect = () => {
               <DropdownMenuCheckboxItem
                 key={option.code}
                 checked={parseInt(option.code) === 1101}
-                onCheckedChange={() => console.log(option.code)}>
+                onCheckedChange={() => onChange(option.code)}>
                 {option.name}
               </DropdownMenuCheckboxItem>
             ))}

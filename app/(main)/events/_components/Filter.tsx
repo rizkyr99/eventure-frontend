@@ -78,7 +78,7 @@ const Filter = () => {
         options={categories}
         onChange={(value) => handleChange('category', value)}
       />
-      <LocationSelect />
+      <LocationSelect onChange={(value) => handleChange('location', value)} />
       <FilterSelect
         label='Free + Paid'
         name='isFree'
