@@ -109,7 +109,13 @@ const Filter = () => {
         options={freeOptions}
         onChange={(value) => handleChange('isFree', value)}
       />
-      <Button onClick={resetFilter}>Reset Filter</Button>
+      <Button
+        onClick={resetFilter}
+        size='sm'
+        variant='destructive'
+        className='h-10 text-sm'>
+        Reset Filter
+      </Button>
     </div>
   );
 };
