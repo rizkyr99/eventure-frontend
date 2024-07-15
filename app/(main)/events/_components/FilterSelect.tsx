@@ -8,6 +8,7 @@ import {
 
 interface FilterSelectProps {
   label: string;
+  initialValue: string;
   name: string;
   options: any[];
   onChange: (value: string) => void;
@@ -15,12 +16,13 @@ interface FilterSelectProps {
 
 const FilterSelect = ({
   label,
+  initialValue,
   name,
   options,
   onChange,
 }: FilterSelectProps) => {
   return (
-    <Select onValueChange={onChange}>
+    <Select defaultValue={initialValue} onValueChange={onChange}>
       <SelectTrigger className='border-none w-fit space-x-2'>
         <SelectValue placeholder={label} />
       </SelectTrigger>

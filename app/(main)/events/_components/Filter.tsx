@@ -5,6 +5,7 @@ import FilterSelect from './FilterSelect';
 import { useRouter, useSearchParams } from 'next/navigation';
 import queryString from 'query-string';
 import LocationSelect from '../../../../components/LocationSelect';
+import { Button } from '@/components/ui/button';
 
 const freeOptions = [
   {
@@ -92,6 +93,7 @@ const Filter = () => {
     <div className='flex items-center gap-3'>
       <FilterSelect
         label='All Categories'
+        initialValue={params.get('category') || 'all'}
         name='category'
         options={categories}
         onChange={(value) => handleChange('category', value)}
@@ -102,10 +104,12 @@ const Filter = () => {
       />
       <FilterSelect
         label='Free + Paid'
+        initialValue={params.get('category') || 'all'}
         name='isFree'
         options={freeOptions}
         onChange={(value) => handleChange('isFree', value)}
       />
+      <Button onClick={resetFilter}>Reset Filter</Button>
     </div>
   );
 };

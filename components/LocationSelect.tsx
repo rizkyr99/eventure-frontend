@@ -115,19 +115,19 @@ const LocationSelect = ({
           )}
         </div>
 
+        {!debouncedSearch && (
+          <DropdownMenuCheckboxItem
+            checked={value === 'all'}
+            onCheckedChange={() => onChange('all')}>
+            All location
+          </DropdownMenuCheckboxItem>
+        )}
         {loading ? (
           <div className='flex items-center justify-center h-10'>
             <Loader2 className='size-4 animate-spin' />
           </div>
         ) : options.length > 0 ? (
           <div>
-            {!debouncedSearch && (
-              <DropdownMenuCheckboxItem
-                checked={value === 'all'}
-                onCheckedChange={() => onChange('all')}>
-                All location
-              </DropdownMenuCheckboxItem>
-            )}
             {options.map((option) => (
               <DropdownMenuCheckboxItem
                 key={option.code}
