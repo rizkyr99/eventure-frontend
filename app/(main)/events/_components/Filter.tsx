@@ -70,6 +70,24 @@ const Filter = () => {
     router.push(url);
   };
 
+  const resetFilter = () => {
+    const currentQuery = queryString.parse(params.toString());
+    delete currentQuery['category'];
+    delete currentQuery['location'];
+    delete currentQuery['isFree'];
+
+    const url = queryString.stringifyUrl(
+      {
+        url: '/events',
+        query: currentQuery,
+      },
+      {
+        skipNull: true,
+      }
+    );
+    router.push(url);
+  };
+
   return (
     <div className='flex items-center gap-3'>
       <FilterSelect
@@ -78,7 +96,10 @@ const Filter = () => {
         options={categories}
         onChange={(value) => handleChange('category', value)}
       />
-      <LocationSelect onChange={(value) => handleChange('location', value)} />
+      <LocationSelect
+        value={params.get('location') || 'all'}
+        onChange={(value) => handleChange('location', value)}
+      />
       <FilterSelect
         label='Free + Paid'
         name='isFree'
