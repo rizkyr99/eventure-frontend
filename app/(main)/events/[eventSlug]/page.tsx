@@ -12,7 +12,7 @@ import Link from 'next/link';
 import React from 'react';
 import TicketModal from './_components/TicketModal';
 import moment from 'moment';
-import { fetchEventDetails } from '@/actions/event';
+import { fetchEventDetails, fetchLocationDetails } from '@/actions/event';
 
 const EventDetailsPage = async ({
   params,
@@ -24,6 +24,8 @@ const EventDetailsPage = async ({
   if (!event) {
     return <div>Event not found</div>;
   }
+
+  const location = await fetchLocationDetails(event.location);
 
   return (
     <main className='my-12 grid grid-cols-3 max-w-screen-xl mx-auto gap-6 min-h-screen'>
@@ -69,7 +71,7 @@ const EventDetailsPage = async ({
             </div>
             <div className='flex items-center gap-2 text-slate-500'>
               <MapPin className='size-4' />
-              The Brickhall & Fatmawati Center
+              {location?.name}
             </div>
           </div>
         </div>

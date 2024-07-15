@@ -13,3 +13,15 @@ export const fetchEventDetails = async (
     console.error(error);
   }
 };
+
+export const fetchLocationDetails = async (locationCode: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/v1/locations/regencies/${locationCode}`
+    );
+    const result = await response.json();
+    return result.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
