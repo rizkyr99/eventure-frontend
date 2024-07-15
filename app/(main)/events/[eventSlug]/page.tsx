@@ -13,6 +13,7 @@ import React from 'react';
 import TicketModal from './_components/TicketModal';
 import moment from 'moment';
 import { fetchEventDetails, fetchLocationDetails } from '@/actions/event';
+import { formatToIDR } from '@/lib/formatToIDR';
 
 const EventDetailsPage = async ({
   params,
@@ -31,9 +32,7 @@ const EventDetailsPage = async ({
     <main className='my-12 grid grid-cols-3 max-w-screen-xl mx-auto gap-6 min-h-screen'>
       <div className='col-span-2 space-y-12'>
         <Image
-          src={
-            'https://res.cloudinary.com/de7uimbtt/image/upload/f_auto,q_auto/v1/eventure/bxwf6h2iew3js6pto065'
-          }
+          src={event.image}
           width={400}
           height={200}
           alt='event'
@@ -76,7 +75,16 @@ const EventDetailsPage = async ({
           </div>
         </div>
         <div className='space-y-2'>
-          <p className='text-2xl font-bold'>Rp 200.000</p>
+          {event.isFree ? (
+            <p className='text-2xl font-bold'>Free</p>
+          ) : (
+            <div>
+              <p className='text-slate-500 text-sm'>Start from</p>
+              <p className='text-2xl font-bold'>
+                {event.lowestPrice && formatToIDR(event.lowestPrice)}
+              </p>
+            </div>
+          )}
           <TicketModal eventId={event.id} />
         </div>
         <div className='space-y-4'>

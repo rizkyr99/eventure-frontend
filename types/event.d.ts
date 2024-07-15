@@ -25,6 +25,8 @@ export interface EventDetails {
   location: string;
   description: string;
   category: string;
+  isFree: boolean;
+  lowestPrice: number;
   organizer: Organizer;
 }
 
