@@ -39,7 +39,7 @@ const EventPagination = ({ totalPages }: EventPaginationProps) => {
       }
     );
     router.push(url);
-  }, [currentPage, currentQuery, router]);
+  }, [currentPage, totalPages, currentQuery, router]);
 
   return (
     <div className='flex items-center justify-end gap-3 mt-6 mb-16'>

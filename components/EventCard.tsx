@@ -12,7 +12,7 @@ interface EventCardProps {
 const EventCard = ({ event }: EventCardProps) => {
   return (
     <Link
-      href={`/event/${event.slug}`}
+      href={`/events/${event.slug}`}
       className='bg-white rounded-3xl overflow-hidden shadow-light hover:shadow-bold cursor-pointer transition'>
       <Image
         src={event.image}

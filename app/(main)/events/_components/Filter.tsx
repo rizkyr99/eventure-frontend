@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import FilterSelect from './FilterSelect';
 import { useRouter, useSearchParams } from 'next/navigation';
 import queryString from 'query-string';
-import LocationSelect from './LocationSelect';
+import LocationSelect from '../../../../components/LocationSelect';
 
 const freeOptions = [
   {

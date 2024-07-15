@@ -31,6 +31,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useCategories } from '@/hooks/useCategories';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import LocationSelect from '@/components/LocationSelect';
 
 const formSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
@@ -294,7 +295,11 @@ const CreateEventPage = () => {
                   <FormItem>
                     <FormLabel>Location</FormLabel>
                     <FormControl>
-                      <Combobox value={field.value} onChange={field.onChange} />
+                      <LocationSelect
+                        className='border w-full rounded-xl justify-start'
+                        value={field.value}
+                        onChange={(value) => field.onChange(value)}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
