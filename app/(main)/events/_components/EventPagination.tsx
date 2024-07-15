@@ -20,7 +20,7 @@ const EventPagination = ({ totalPages }: EventPaginationProps) => {
 
   useEffect(() => {
     // const nextPage = currentPage + 1;
-    if (currentPage > totalPages) {
+    if (currentPage > totalPages && totalPages > 0) {
       setCurrentPage(totalPages);
     }
     if (currentPage === 1) {
