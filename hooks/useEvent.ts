@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import qs from 'query-string';
 
-const fetchEvents = async (queryString: string): Promise<EventSummary[]> => {
+const fetchEvents = async (queryString: string) => {
   const parsedQuery = qs.parse(queryString);
   parsedQuery.size = '9';
   queryString = qs.stringify(parsedQuery);
@@ -15,21 +15,17 @@ const fetchEvents = async (queryString: string): Promise<EventSummary[]> => {
   );
 
   const result = await response.json();
-  return result.data.content;
+  return result.data;
 };
 
 export const useEvent = () => {
   const searchParams = useSearchParams();
   const queryString = searchParams.toString();
 
-  const {
-    data: events,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['events', queryString],
     queryFn: () => fetchEvents(queryString),
   });
 
-  return { events, isLoading, error };
+  return { data, isLoading, error };
 };

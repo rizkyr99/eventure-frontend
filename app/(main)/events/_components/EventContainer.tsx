@@ -1,8 +1,8 @@
 import Filter from './Filter';
 import Sort from './Sort';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import EventList from './EventList';
 import { Suspense } from 'react';
+import EventPagination from './EventPagination';
 
 const EventContainer = () => {
   return (
@@ -13,15 +13,6 @@ const EventContainer = () => {
           <Sort />
         </div>
         <EventList />
-        <div className='flex items-center justify-end gap-3 mt-6 mb-16'>
-          <p>Page 1 of 3</p>
-          <button className='size-10 bg-white flex items-center justify-center rounded-lg shadow hover:bg-primary hover:text-white transition'>
-            <ChevronLeft className='size-6' />
-          </button>
-          <button className='size-10 bg-white flex items-center justify-center rounded-lg shadow hover:bg-primary hover:text-white transition'>
-            <ChevronRight className='size-6' />
-          </button>
-        </div>
       </section>
     </Suspense>
   );
