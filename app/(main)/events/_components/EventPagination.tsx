@@ -20,6 +20,9 @@ const EventPagination = ({ totalPages }: EventPaginationProps) => {
 
   useEffect(() => {
     // const nextPage = currentPage + 1;
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
     if (currentPage === 1) {
       delete currentQuery['page'];
     } else {
