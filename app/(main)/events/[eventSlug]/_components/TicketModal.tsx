@@ -5,26 +5,67 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { useEffect, useState } from 'react';
 import TicketItem from './TicketItem';
 import Image from 'next/image';
+import { formatToIDR } from '@/lib/formatToIDR';
 
 interface TicketModalProps {
   eventId: number;
+  isFree: boolean;
 }
 
-const TicketModal = ({ eventId }: TicketModalProps) => {
-  const [tickets, setTickets] = useState([]);
+interface Ticket {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
+const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [orderItems, setOrderItems] = useState<Ticket[]>([]);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
     const fetchTickets = async () => {
-      const response = await fetch(
-        `http://localhost:8080/api/v1/events/${eventId}/tickets`
-      );
-      const result = await response.json();
-      setTickets(result.data);
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/v1/events/${eventId}/tickets`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch tickets');
+        }
+        const result = await response.json();
+        setTickets(result.data);
+      } catch (error) {
+        console.error('Error fetching tickets:', error);
+      }
     };
     fetchTickets();
   }, [eventId]);
 
-  console.log(tickets);
+  const handleTicketChange = (ticket: Ticket, quantity: number) => {
+    setOrderItems((prevOrderItems) => {
+      const index = prevOrderItems.findIndex(
+        (item) => item.name === ticket.name
+      );
+
+      if (index === -1) {
+        if (quantity === 0) return prevOrderItems;
+        return [...prevOrderItems, { ...ticket, quantity }];
+      } else {
+        if (quantity === 0) {
+          return prevOrderItems.filter((item) => item.name !== ticket.name);
+        }
+        const newOrderItems = [...prevOrderItems];
+        newOrderItems[index].quantity = quantity;
+        return newOrderItems;
+      }
+    });
+  };
+
+  useEffect(() => {
+    setTotalPrice(
+      orderItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    );
+  }, [orderItems]);
 
   return (
     <Dialog>
@@ -41,46 +82,45 @@ const TicketModal = ({ eventId }: TicketModalProps) => {
             className='w-full object-cover rounded-2xl sm:hidden mb-4'
           />
           <div className='space-y-4 flex-1 overflow-y-auto pb-6'>
-            {tickets.map((ticket, index) => (
-              <TicketItem key={index} ticket={ticket} />
-            ))}
-          </div>
-          <div className='space-y-4'>
-            <div className='flex items-center justify-between p-4 bg-indigo-100 border border-indigo-200 rounded-lg'>
-              <p className='font-bold text-primary'>10% off(-15000)</p>
-              <p className='text-xs text-primary'>1 voucher used</p>
-            </div>
+            {isFree ? (
+              <div className='h-full flex items-center justify-center'>
+                This event is free
+              </div>
+            ) : (
+              tickets.map((ticket, index) => (
+                <TicketItem
+                  key={index}
+                  onChange={handleTicketChange}
+                  ticket={ticket}
+                />
+              ))
+            )}
           </div>
         </div>
         <div>
-          <Image
-            src='https://res.cloudinary.com/de7uimbtt/image/upload/f_auto,q_auto/v1/eventure/ihojzhmvjqtb9uvpxlse'
-            width={300}
-            height={415}
-            alt='ticket layout'
-            className='w-full object-cover rounded-2xl hidden sm:block'
-          />
           <div className='py-4'>
             <p className='font-bold mb-4'>Order summary</p>
             <div className='space-y-1'>
-              <div className='flex items-center justify-between text-sm'>
-                <p>1 x VIP A</p>
-                <p>Rp 1.200.000</p>
-              </div>
-              <div className='flex items-center justify-between text-sm'>
-                <p>1 x VIP A</p>
-                <p>Rp 1.200.000</p>
-              </div>
-              <div className='flex items-center justify-between text-sm'>
-                <p>1 x VIP A</p>
-                <p>Rp 1.200.000</p>
-              </div>
+              {orderItems.map((item, index) => (
+                <div
+                  key={index}
+                  className='flex items-center justify-between text-sm'>
+                  <p>{`${item.quantity}x ${item.name}`}</p>
+                  <p>{formatToIDR(item.price * item.quantity)}</p>
+                </div>
+              ))}
             </div>
           </div>
-          <div className='h-14 py-4 border-t'>
+          <div className='py-4 border-t space-y-4'>
+            <div className='space-y-4'>
+              <div className='flex items-center justify-between p-4 bg-indigo-100 border border-indigo-200 rounded-lg'>
+                <p className='font-bold text-primary'>10% off(-15000)</p>
+                <p className='text-xs text-primary'>1 voucher used</p>
+              </div>
+            </div>
             <div className='flex items-center justify-between font-bold'>
-              <p>1 x VIP A</p>
-              <p>Rp 1.200.000</p>
+              <p>Total Price</p>
+              <p>{formatToIDR(totalPrice)}</p>
             </div>
           </div>
           <Button

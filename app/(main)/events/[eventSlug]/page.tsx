@@ -85,7 +85,7 @@ const EventDetailsPage = async ({
               </p>
             </div>
           )}
-          <TicketModal eventId={event.id} />
+          <TicketModal eventId={event.id} isFree={event.isFree} />
         </div>
         <div className='space-y-4'>
           <p className='font-bold'>Share Event</p>
