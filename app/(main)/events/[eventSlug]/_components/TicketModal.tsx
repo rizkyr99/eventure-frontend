@@ -9,6 +9,7 @@ import { formatToIDR } from '@/lib/formatToIDR';
 import VoucherModal from './VoucherModal';
 import { Ticket, Voucher } from '@/types/event';
 import useOrderStore from '@/hooks/useOrderStore';
+import Link from 'next/link';
 
 interface TicketModalProps {
   eventId: number;
@@ -23,7 +24,8 @@ const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
   const setAppliedVouchers = useOrderStore((state) => state.setAppliedVouchers);
   const totalDiscount = useOrderStore((state) => state.totalDiscount);
   const setTotalDiscount = useOrderStore((state) => state.setTotalDiscount);
-  const [totalPrice, setTotalPrice] = useState(0);
+  const totalPrice = useOrderStore((state) => state.totalPrice);
+  const setTotalPrice = useOrderStore((state) => state.setTotalPrice);
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -64,7 +66,7 @@ const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
 
     setTotalDiscount(discount);
     setTotalPrice(price - discount);
-  }, [orderItems, appliedVouchers, setTotalDiscount]);
+  }, [orderItems, appliedVouchers, setTotalDiscount, setTotalPrice]);
 
   return (
     <Dialog>
@@ -128,12 +130,14 @@ const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
               <p>{formatToIDR(totalPrice)}</p>
             </div>
           </div>
-          <Button
-            disabled={orderItems.length === 0}
-            size='lg'
-            className='w-full text-xl font-semibold sticky bottom-0'>
-            Checkout
-          </Button>
+          <Link href='/order/checkout'>
+            <Button
+              disabled={orderItems.length === 0}
+              size='lg'
+              className='w-full text-xl font-semibold sticky bottom-0'>
+              Checkout
+            </Button>
+          </Link>
         </div>
       </DialogContent>
     </Dialog>
