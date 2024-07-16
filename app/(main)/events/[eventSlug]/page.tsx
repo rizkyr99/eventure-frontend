@@ -14,12 +14,15 @@ import TicketModal from './_components/TicketModal';
 import moment from 'moment';
 import { fetchEventDetails, fetchLocationDetails } from '@/actions/event';
 import { formatToIDR } from '@/lib/formatToIDR';
+import { auth } from '@/auth';
 
 const EventDetailsPage = async ({
   params,
 }: {
   params: { eventSlug: string };
 }) => {
+  const session = await auth();
+
   const event = await fetchEventDetails(params.eventSlug);
 
   if (!event) {
@@ -85,7 +88,11 @@ const EventDetailsPage = async ({
               </p>
             </div>
           )}
-          <TicketModal eventId={event.id} isFree={event.isFree} />
+          <TicketModal
+            session={session}
+            eventId={event.id}
+            isFree={event.isFree}
+          />
         </div>
         <div className='space-y-4'>
           <p className='font-bold'>Share Event</p>

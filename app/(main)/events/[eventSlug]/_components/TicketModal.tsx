@@ -10,13 +10,16 @@ import VoucherModal from './VoucherModal';
 import { Ticket, Voucher } from '@/types/event';
 import useOrderStore from '@/hooks/useOrderStore';
 import Link from 'next/link';
+import { Session } from 'next-auth';
 
 interface TicketModalProps {
+  session: Session | null;
   eventId: number;
   isFree: boolean;
 }
 
-const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
+const TicketModal = ({ session, eventId, isFree }: TicketModalProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const orderItems = useOrderStore((state) => state.orderItems);
   const setOrderItems = useOrderStore((state) => state.setOrderItems);
@@ -26,6 +29,11 @@ const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
   const setTotalDiscount = useOrderStore((state) => state.setTotalDiscount);
   const totalPrice = useOrderStore((state) => state.totalPrice);
   const setTotalPrice = useOrderStore((state) => state.setTotalPrice);
+  const setEventId = useOrderStore((state) => state.setEventId);
+
+  useEffect(() => {
+    setEventId(eventId);
+  }, [eventId, setEventId]);
 
   useEffect(() => {
     const fetchTickets = async () => {
@@ -68,10 +76,24 @@ const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
     setTotalPrice(price - discount);
   }, [orderItems, appliedVouchers, setTotalDiscount, setTotalPrice]);
 
+  const handleOpenChange = () => {
+    if (session?.user.role === 'ORGANIZER') return;
+    setIsOpen((prev) => !prev);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className='w-full'>Buy Ticket</Button>
+        <div>
+          <Button
+            className='w-full'
+            disabled={session?.user.role === 'ORGANIZER'}>
+            Buy Ticket
+          </Button>
+          {session?.user.role === 'ORGANIZER' && (
+            <p>Only attendee can join the event</p>
+          )}
+        </div>
       </DialogTrigger>
       <DialogContent className='p-6 pt-12 bg-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[2fr,1fr] max-w-[1000px] max-h-screen overflow-y-auto'>
         <div className='flex flex-col h-full'>

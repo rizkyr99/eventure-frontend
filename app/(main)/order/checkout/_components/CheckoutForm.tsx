@@ -1,5 +1,6 @@
 'use client';
 
+import { createOrder } from '@/actions/order';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -15,7 +16,9 @@ import useOrderStore from '@/hooks/useOrderStore';
 import { formatToIDR } from '@/lib/formatToIDR';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Session } from 'next-auth';
+import { useRouter } from 'next/navigation';
 import { useFieldArray, useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -25,13 +28,15 @@ const formSchema = z.object({
   paymentMethod: z.string(),
   orderItems: z.array(
     z.object({
-      id: z.number(),
+      ticketTypeId: z.number(),
       name: z.string(),
       price: z.number(),
       quantity: z.number(),
     })
   ),
   voucherIds: z.array(z.number()),
+  totalPrice: z.number(),
+  eventId: z.number(),
 });
 
 interface CheckoutFormProps {
@@ -42,28 +47,50 @@ const CheckoutForm = ({ session }: CheckoutFormProps) => {
   const orderItems = useOrderStore((state) => state.orderItems);
   const totalPrice = useOrderStore((state) => state.totalPrice);
   const totalDiscount = useOrderStore((state) => state.totalDiscount);
+  const appliedVouchers = useOrderStore((state) => state.appliedVouchers);
+  const eventId = useOrderStore((state) => state.eventId);
 
-  console.log(session);
+  const router = useRouter();
+
+  if (orderItems.length === 0) {
+    router.back();
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
-      email: '',
-      paymentMethod: '',
-      orderItems,
+      email: session?.user.email ?? '',
+      paymentMethod: 'Credit/Debit Card',
+      orderItems: orderItems.map((item) => ({
+        ticketTypeId: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+      voucherIds: appliedVouchers.map((voucher) => voucher.id),
+      totalPrice,
+      eventId,
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields } = useFieldArray({
     control: form.control,
     name: 'orderItems',
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await createOrder(values);
+      toast.success('Order created successfully');
+      router.push('/order/success');
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
+
+  console.log(form.formState.errors);
 
   return (
     <Form {...form}>
@@ -128,13 +155,13 @@ const CheckoutForm = ({ session }: CheckoutFormProps) => {
                     defaultValue={field.value}>
                     <FormItem className='flex items-center space-x-3 space-y-0'>
                       <FormControl>
-                        <RadioGroupItem value='all' />
+                        <RadioGroupItem value='Credit/Debit Card' />
                       </FormControl>
                       <FormLabel>Credit/Debit Card</FormLabel>
                     </FormItem>
                     <FormItem className='flex items-center space-x-3 space-y-0'>
                       <FormControl>
-                        <RadioGroupItem value='bank_transfer' />
+                        <RadioGroupItem value='Bank Transfer' />
                       </FormControl>
                       <FormLabel>Bank Transfer</FormLabel>
                     </FormItem>
