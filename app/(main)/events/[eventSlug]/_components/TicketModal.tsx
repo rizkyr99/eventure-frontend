@@ -7,24 +7,22 @@ import TicketItem from './TicketItem';
 import Image from 'next/image';
 import { formatToIDR } from '@/lib/formatToIDR';
 import VoucherModal from './VoucherModal';
-import { Voucher } from '@/types/event';
+import { Ticket, Voucher } from '@/types/event';
+import useOrderStore from '@/hooks/useOrderStore';
 
 interface TicketModalProps {
   eventId: number;
   isFree: boolean;
 }
 
-interface Ticket {
-  name: string;
-  quantity: number;
-  price: number;
-}
-
 const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [orderItems, setOrderItems] = useState<Ticket[]>([]);
-  const [appliedVouchers, setAppliedVouchers] = useState<Voucher[]>([]);
-  const [totalDiscount, setTotalDiscount] = useState(0);
+  const orderItems = useOrderStore((state) => state.orderItems);
+  const setOrderItems = useOrderStore((state) => state.setOrderItems);
+  const appliedVouchers = useOrderStore((state) => state.appliedVouchers);
+  const setAppliedVouchers = useOrderStore((state) => state.setAppliedVouchers);
+  const totalDiscount = useOrderStore((state) => state.totalDiscount);
+  const setTotalDiscount = useOrderStore((state) => state.setTotalDiscount);
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
@@ -46,23 +44,11 @@ const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
   }, [eventId]);
 
   const handleTicketChange = (ticket: Ticket, quantity: number) => {
-    setOrderItems((prevOrderItems) => {
-      const index = prevOrderItems.findIndex(
-        (item) => item.name === ticket.name
-      );
-
-      if (index === -1) {
-        if (quantity === 0) return prevOrderItems;
-        return [...prevOrderItems, { ...ticket, quantity }];
-      } else {
-        if (quantity === 0) {
-          return prevOrderItems.filter((item) => item.name !== ticket.name);
-        }
-        const newOrderItems = [...prevOrderItems];
-        newOrderItems[index].quantity = quantity;
-        return newOrderItems;
-      }
-    });
+    const newOrderItems = orderItems.filter((item) => item.id !== ticket.id);
+    if (quantity > 0) {
+      newOrderItems.push({ ...ticket, quantity });
+    }
+    setOrderItems(newOrderItems);
   };
 
   useEffect(() => {
@@ -78,7 +64,7 @@ const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
 
     setTotalDiscount(discount);
     setTotalPrice(price - discount);
-  }, [orderItems, appliedVouchers]);
+  }, [orderItems, appliedVouchers, setTotalDiscount]);
 
   return (
     <Dialog>
@@ -143,6 +129,7 @@ const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
             </div>
           </div>
           <Button
+            disabled={orderItems.length === 0}
             size='lg'
             className='w-full text-xl font-semibold sticky bottom-0'>
             Checkout

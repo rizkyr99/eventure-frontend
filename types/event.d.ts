@@ -55,3 +55,10 @@ enum VoucherType {
   REFERRAL,
   NONREFERRAL,
 }
+
+export interface Ticket {
+  id: number;
+  name: string;
+  quantity: number;
+  price: number;
+}
