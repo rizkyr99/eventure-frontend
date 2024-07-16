@@ -51,7 +51,9 @@ const LocationSelect = ({
         console.log(error);
       }
     };
-    fetchLocationDetails();
+    if (value !== 'all') {
+      fetchLocationDetails();
+    }
   }, [value]);
 
   useEffect(() => {

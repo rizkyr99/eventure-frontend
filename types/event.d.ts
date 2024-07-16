@@ -42,3 +42,16 @@ export interface Organizer {
   address: any;
   image: any;
 }
+
+export interface Voucher {
+  id: number;
+  type: VoucherType;
+  expirationDate: string;
+  amount: number;
+  maxUses: number;
+}
+
+enum VoucherType {
+  REFERRAL,
+  NONREFERRAL,
+}

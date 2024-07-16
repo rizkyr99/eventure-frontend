@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import TicketItem from './TicketItem';
 import Image from 'next/image';
 import { formatToIDR } from '@/lib/formatToIDR';
+import VoucherModal from './VoucherModal';
+import { Voucher } from '@/types/event';
 
 interface TicketModalProps {
   eventId: number;
@@ -21,6 +23,8 @@ interface Ticket {
 const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [orderItems, setOrderItems] = useState<Ticket[]>([]);
+  const [appliedVouchers, setAppliedVouchers] = useState<Voucher[]>([]);
+  const [totalDiscount, setTotalDiscount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
@@ -62,10 +66,19 @@ const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
   };
 
   useEffect(() => {
-    setTotalPrice(
-      orderItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    let price = orderItems.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
     );
-  }, [orderItems]);
+    let discount = 0;
+
+    appliedVouchers.forEach((voucher) => {
+      discount += (voucher.amount / 100) * price;
+    });
+
+    setTotalDiscount(discount);
+    setTotalPrice(price - discount);
+  }, [orderItems, appliedVouchers]);
 
   return (
     <Dialog>
@@ -112,12 +125,18 @@ const TicketModal = ({ eventId, isFree }: TicketModalProps) => {
             </div>
           </div>
           <div className='py-4 border-t space-y-4'>
-            <div className='space-y-4'>
+            <VoucherModal
+              appliedVouchers={appliedVouchers}
+              setAppliedVouchers={setAppliedVouchers}
+              totalDiscount={totalDiscount}
+              eventId={eventId}
+            />
+            {/* <div className='space-y-4'>
               <div className='flex items-center justify-between p-4 bg-indigo-100 border border-indigo-200 rounded-lg'>
                 <p className='font-bold text-primary'>10% off(-15000)</p>
                 <p className='text-xs text-primary'>1 voucher used</p>
               </div>
-            </div>
+            </div> */}
             <div className='flex items-center justify-between font-bold'>
               <p>Total Price</p>
               <p>{formatToIDR(totalPrice)}</p>
