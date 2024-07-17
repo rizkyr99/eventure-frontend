@@ -2,7 +2,6 @@ import Filter from './Filter';
 import Sort from './Sort';
 import EventList from './EventList';
 import { Suspense } from 'react';
-import EventPagination from './EventPagination';
 
 const EventContainer = () => {
   return (

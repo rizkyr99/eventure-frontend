@@ -4,12 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { useEffect, useState } from 'react';
 import TicketItem from './TicketItem';
-import Image from 'next/image';
 import { formatToIDR } from '@/lib/formatToIDR';
 import VoucherModal from './VoucherModal';
-import { Ticket, Voucher } from '@/types/event';
+import { Ticket } from '@/types/event';
 import useOrderStore from '@/hooks/useOrderStore';
-import Link from 'next/link';
 import { Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
 
