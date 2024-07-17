@@ -20,7 +20,6 @@ const freeOptions = [
 
 const Filter = () => {
   const [categories, setCategories] = useState([]);
-  const [locations, setLocations] = useState([]);
   const params = useSearchParams();
   const router = useRouter();
 
@@ -35,19 +34,6 @@ const Filter = () => {
       }
     };
     fetchCategories();
-    const fetchLocations = async () => {
-      try {
-        const response = await fetch(
-          'http://localhost:8080/api/v1/locations/regencies'
-        );
-        const result = await response.json();
-        console.log(result.data);
-        setLocations(result.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchLocations();
   }, []);
 
   const handleChange = (name: string, value: string) => {
@@ -104,7 +90,7 @@ const Filter = () => {
       />
       <FilterSelect
         label='Free + Paid'
-        initialValue={params.get('category') || 'all'}
+        initialValue={params.get('isFree') || 'all'}
         name='isFree'
         options={freeOptions}
         onChange={(value) => handleChange('isFree', value)}
