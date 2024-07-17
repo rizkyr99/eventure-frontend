@@ -11,6 +11,7 @@ import { Ticket, Voucher } from '@/types/event';
 import useOrderStore from '@/hooks/useOrderStore';
 import Link from 'next/link';
 import { Session } from 'next-auth';
+import { useRouter } from 'next/navigation';
 
 interface TicketModalProps {
   session: Session | null;
@@ -30,6 +31,8 @@ const TicketModal = ({ session, eventId, isFree }: TicketModalProps) => {
   const totalPrice = useOrderStore((state) => state.totalPrice);
   const setTotalPrice = useOrderStore((state) => state.setTotalPrice);
   const setEventId = useOrderStore((state) => state.setEventId);
+
+  const router = useRouter();
 
   useEffect(() => {
     setEventId(eventId);
@@ -81,6 +84,10 @@ const TicketModal = ({ session, eventId, isFree }: TicketModalProps) => {
     setIsOpen((prev) => !prev);
   };
 
+  const handleCheckout = () => {
+    router.push('/order/checkout');
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
@@ -97,13 +104,6 @@ const TicketModal = ({ session, eventId, isFree }: TicketModalProps) => {
       </DialogTrigger>
       <DialogContent className='p-6 pt-12 bg-slate-100 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[2fr,1fr] max-w-[1000px] max-h-screen overflow-y-auto'>
         <div className='flex flex-col h-full'>
-          <Image
-            src='https://res.cloudinary.com/de7uimbtt/image/upload/f_auto,q_auto/v1/eventure/ihojzhmvjqtb9uvpxlse'
-            width={300}
-            height={415}
-            alt='ticket layout'
-            className='w-full object-cover rounded-2xl sm:hidden mb-4'
-          />
           <div className='space-y-4 flex-1 overflow-y-auto pb-6'>
             {isFree ? (
               <div className='h-full flex items-center justify-center'>
@@ -152,14 +152,14 @@ const TicketModal = ({ session, eventId, isFree }: TicketModalProps) => {
               <p>{formatToIDR(totalPrice)}</p>
             </div>
           </div>
-          <Link href='/order/checkout'>
-            <Button
-              disabled={orderItems.length === 0}
-              size='lg'
-              className='w-full text-xl font-semibold sticky bottom-0'>
-              Checkout
-            </Button>
-          </Link>
+          <Button
+            type='button'
+            onClick={handleCheckout}
+            disabled={orderItems.length === 0}
+            size='lg'
+            className='w-full text-xl font-semibold sticky bottom-0'>
+            Checkout
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
