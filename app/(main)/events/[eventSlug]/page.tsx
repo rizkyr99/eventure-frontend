@@ -32,8 +32,8 @@ const EventDetailsPage = async ({
   const location = await fetchLocationDetails(event.location);
 
   return (
-    <main className='my-12 grid grid-cols-3 max-w-screen-xl mx-auto gap-6 min-h-screen'>
-      <div className='col-span-2 space-y-12'>
+    <main className='my-6 lg:my-12 grid grid-cols-1 lg:grid-cols-3 max-w-screen-xl mx-auto gap-6 min-h-screen p-4'>
+      <div className='lg:col-span-2 space-y-6 lg:space-y-12'>
         <Image
           src={event.image}
           width={400}
@@ -55,7 +55,7 @@ const EventDetailsPage = async ({
           </div>
         </div>
       </div>
-      <div className='sticky top-0 p-6 space-y-12 h-fit'>
+      <div className='sticky top-0 lg:p-6 space-y-12 h-fit'>
         <div className='space-y-4'>
           <h1 className='text-3xl font-bold'>{event.name}</h1>
           <div className='space-y-2'>
