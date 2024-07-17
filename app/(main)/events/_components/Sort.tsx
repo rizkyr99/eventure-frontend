@@ -10,7 +10,7 @@ import React from 'react';
 
 const Sort = () => {
   return (
-    <div className='flex items-center gap-3'>
+    <div className='flex items-center justify-center max-md:w-full gap-3'>
       <Select defaultValue='latest'>
         <SelectTrigger className='border-none w-fit space-x-2'>
           <SelectValue />

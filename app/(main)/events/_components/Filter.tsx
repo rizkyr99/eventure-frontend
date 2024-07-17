@@ -76,7 +76,7 @@ const Filter = () => {
   };
 
   return (
-    <div className='flex items-center gap-3'>
+    <div className='flex flex-wrap justify-center items-center gap-3'>
       <FilterSelect
         label='All Categories'
         initialValue={params.get('category') || 'all'}
