@@ -1,6 +1,5 @@
 'use client';
 
-import Combobox from '@/components/Combobox';
 import { Button } from '@/components/ui/button';
 
 import {
@@ -50,11 +49,11 @@ const formSchema = z.object({
     .array(
       z.object({
         name: z.string().min(1, 'Name is required'),
-        price: z.number().min(1, 'Price is required'),
+        price: z.number().gte(0, 'Price must be greater than or equal to 0'),
         quantity: z.number().min(1, 'Quantity is required'),
       })
     )
-    .optional(),
+    .nonempty('At least one ticket type is required'),
 });
 
 const CreateEventPage = () => {
@@ -87,6 +86,8 @@ const CreateEventPage = () => {
     control: form.control,
     name: 'ticketTypes',
   });
+
+  console.log(form.formState.errors);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -327,12 +328,14 @@ const CreateEventPage = () => {
                 type='button'
                 onClick={() => setModalOpen(true)}
                 size='sm'
-                disabled={form.getValues('isFree')}
                 className='text-sm'>
                 Add Ticket
               </Button>
             </div>
             <div className='space-y-2'>
+              <FormMessage>
+                {form.formState.errors.ticketTypes?.message}
+              </FormMessage>
               {fields.map((field, index) => (
                 <div
                   key={index}

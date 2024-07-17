@@ -11,6 +11,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -35,10 +36,10 @@ interface CreateTicketModalProps {
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  price: z.coerce.number().gte(1, 'Price must be greater than or equal to 1'),
+  price: z.coerce.number(),
   quantity: z.coerce
     .number()
-    .gte(1, 'Quantity must be greater than or equal to 1'),
+    .gte(0, 'Quantity must be greater than or equal to 1'),
 });
 
 const CreateTicketModal = ({
@@ -67,12 +68,13 @@ const CreateTicketModal = ({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <DialogHeader>Create New Ticket</DialogHeader>
-            <div className='space-y-4'>
+            <div className='space-y-2 mt-4'>
               <FormField
                 control={form.control}
                 name='name'
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Ticket Name</FormLabel>
                     <FormControl>
                       <Input placeholder='Ticket Name' {...field} />
                     </FormControl>
@@ -85,6 +87,7 @@ const CreateTicketModal = ({
                 name='price'
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Price</FormLabel>
                     <FormControl>
                       <Input
                         type='number'
@@ -101,6 +104,7 @@ const CreateTicketModal = ({
                 name='quantity'
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel>Quantity</FormLabel>
                     <FormControl>
                       <Input
                         type='number'
