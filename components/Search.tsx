@@ -3,7 +3,7 @@ import React from 'react';
 
 const Search = () => {
   return (
-    <div className='w-full max-w-md h-12 flex items-center bg-slate-100 rounded-full overflow-hidden pl-4 gap-4'>
+    <div className='w-full max-w-md h-12 hidden md:flex items-center bg-slate-100 rounded-full overflow-hidden pl-4 gap-4'>
       <SearchIcon className='size-4 text-slate-500 flex-shrink-0' />
       <input
         type='text'

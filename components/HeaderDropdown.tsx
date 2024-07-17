@@ -43,7 +43,7 @@ const HeaderDropdown = ({ name, email, role }: HeaderDropdownProps) => {
         )}
         <DropdownMenuItem asChild>
           <Link
-            href={role === 'ORGANIZER' ? 'organizer/profile' : 'user/profile'}
+            href={role === 'ORGANIZER' ? '/organizer/profile' : '/user/profile'}
             className='cursor-pointer'>
             <User className='size-4 mr-2' />
             <span>My Profile</span>
@@ -51,7 +51,7 @@ const HeaderDropdown = ({ name, email, role }: HeaderDropdownProps) => {
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link
-            href={role === 'ORGANIZER' ? 'organizer/events' : 'user/events'}
+            href={role === 'ORGANIZER' ? '/organizer/events' : '/user/events'}
             className='cursor-pointer'>
             <Calendar className='size-4 mr-2' />
             <span>My Events</span>
