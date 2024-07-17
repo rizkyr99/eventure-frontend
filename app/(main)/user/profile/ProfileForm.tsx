@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -16,6 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Copy, Star } from 'lucide-react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 interface ProfileFormProps {
@@ -33,10 +35,20 @@ const ProfileForm = ({ profile }: ProfileFormProps) => {
       email: profile?.email,
     },
   });
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(profile?.attendee.referralCode);
+    toast.success('Referral code copied');
+  };
+
+  const onSubmit = () => {
+    toast.success('Profile updated');
+  };
+
   return (
     <Form {...form}>
       <form
-        onSubmit={() => {}}
+        onSubmit={form.handleSubmit(onSubmit)}
         className='py-12 px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr,2fr] gap-6 max-w-screen-xl mx-auto'>
         <div className='bg-white rounded-3xl px-6 py-12'>
           <div className='flex flex-col items-center'>
@@ -62,7 +74,7 @@ const ProfileForm = ({ profile }: ProfileFormProps) => {
                 <p className='text-xl font-bold tracking-widest'>
                   {profile?.attendee.referralCode}
                 </p>
-                <button>
+                <button type='button' onClick={handleCopy}>
                   <Copy className='size-4' />
                 </button>
               </div>
@@ -167,6 +179,9 @@ const ProfileForm = ({ profile }: ProfileFormProps) => {
               </div>
             </TabsContent>
           </Tabs>
+        </div>
+        <div className='col-span-2 flex justify-end'>
+          <Button type='submit'>Save</Button>
         </div>
       </form>
     </Form>
