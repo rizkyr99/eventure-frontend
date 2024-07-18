@@ -58,6 +58,7 @@ const formSchema = z.object({
 
 const CreateEventPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const { categories } = useCategories();
   const router = useRouter();
 
@@ -82,7 +83,7 @@ const CreateEventPage = () => {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, update, remove } = useFieldArray({
     control: form.control,
     name: 'ticketTypes',
   });
@@ -134,6 +135,32 @@ const CreateEventPage = () => {
     } catch (error: any) {
       toast.error(error.message);
     }
+  };
+
+  const handleCreateTicket = (ticketData: {
+    name: string;
+    price: number;
+    quantity: number;
+  }) => {
+    append(ticketData);
+    setModalOpen(false);
+  };
+
+  const handleUpdateTicket = (ticketData: {
+    name: string;
+    price: number;
+    quantity: number;
+  }) => {
+    if (editingIndex !== null) {
+      update(editingIndex, ticketData);
+      setModalOpen(false);
+      setEditingIndex(null);
+    }
+  };
+
+  const openEditModal = (index: number) => {
+    setEditingIndex(index);
+    setModalOpen(true);
   };
 
   return (
@@ -352,7 +379,10 @@ const CreateEventPage = () => {
                     </div>
                   </div>
                   <div className='flex items-center'>
-                    <button className='bg-amber-500 p-2 rounded-s hover:opacity-75 transition'>
+                    <button
+                      type='button'
+                      onClick={() => openEditModal(index)}
+                      className='bg-amber-500 p-2 rounded-s hover:opacity-75 transition'>
                       <Edit className='size-4 text-white' />
                     </button>
                     <button className='bg-red-500 p-2 rounded-e hover:opacity-75 transition'>
@@ -371,7 +401,10 @@ const CreateEventPage = () => {
       <CreateTicketModal
         isOpen={modalOpen}
         onClose={handleModalClose}
-        append={append}
+        onSubmit={
+          editingIndex !== null ? handleUpdateTicket : handleCreateTicket
+        }
+        initialTicket={editingIndex !== null ? fields[editingIndex] : undefined}
       />
     </>
   );

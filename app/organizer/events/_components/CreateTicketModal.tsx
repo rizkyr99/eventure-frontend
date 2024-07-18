@@ -16,22 +16,19 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 interface CreateTicketModalProps {
   isOpen: boolean;
   onClose: () => void;
-  append: ({
-    name,
-    price,
-    quantity,
-  }: {
+  initialTicket?: {
     name: string;
     price: number;
     quantity: number;
-  }) => void;
+  };
+  onSubmit: (data: { name: string; price: number; quantity: number }) => void;
 }
 
 const formSchema = z.object({
@@ -45,7 +42,8 @@ const formSchema = z.object({
 const CreateTicketModal = ({
   isOpen,
   onClose,
-  append,
+  initialTicket,
+  onSubmit,
 }: CreateTicketModalProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
@@ -56,17 +54,22 @@ const CreateTicketModal = ({
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    append(values);
+  useEffect(() => {
+    if (initialTicket) {
+      form.reset(initialTicket);
+    }
+  }, [form, initialTicket]);
+
+  const handleSubmit = (values: z.infer<typeof formSchema>) => {
+    onSubmit(values);
     onClose();
-    form.reset();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
             <DialogHeader>Create New Ticket</DialogHeader>
             <div className='space-y-2 mt-4'>
               <FormField
