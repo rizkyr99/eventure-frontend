@@ -4,6 +4,7 @@ import {
   Contact,
   Gauge,
   LayoutDashboard,
+  Megaphone,
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -33,6 +34,12 @@ const Sidebar = () => {
               className='px-4 py-3 rounded-lg flex items-center gap-2 text-slate-500 hover:bg-slate-100 cursor-pointer transition'>
               <Calendar className='size-6 shrink-0' />
               <span className='truncate'>Events</span>
+            </Link>
+            <Link
+              href='/organizer/promotions'
+              className='px-4 py-3 rounded-lg flex items-center gap-2 text-slate-500 hover:bg-slate-100 cursor-pointer transition'>
+              <Megaphone className='size-6 shrink-0' />
+              <span className='truncate'>Promotions</span>
             </Link>
             <Link
               href='/organizer/transactions'

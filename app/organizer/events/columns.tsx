@@ -3,7 +3,8 @@
 import { Button } from '@/components/ui/button';
 import { EventSummary } from '@/types/event';
 import { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, Edit } from 'lucide-react';
+import Link from 'next/link';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -48,5 +49,14 @@ export const columns: ColumnDef<EventSummary>[] = [
   {
     accessorKey: '',
     header: 'Actions',
+    cell: ({ row }) => {
+      return (
+        <Link href={`/organizer/events/update/${row.original.id}`}>
+          <Button size='sm'>
+            <Edit className='size-4' />
+          </Button>
+        </Link>
+      );
+    },
   },
 ];

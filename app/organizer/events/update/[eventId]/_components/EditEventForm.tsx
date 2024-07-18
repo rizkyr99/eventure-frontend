@@ -19,18 +19,19 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { formatToIDR } from '@/lib/formatToIDR';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Edit, Trash } from 'lucide-react';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
+import CreateTicketModal from '../../../_components/CreateTicketModal';
+import { Checkbox } from '@/components/ui/checkbox';
+import { formatToIDR } from '@/lib/formatToIDR';
+import LocationSelect from '@/components/LocationSelect';
+import { useCategories } from '@/hooks/useCategories';
+import { useParams, useRouter } from 'next/navigation';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import CreateTicketModal from '../_components/CreateTicketModal';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useCategories } from '@/hooks/useCategories';
+import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
-import LocationSelect from '@/components/LocationSelect';
+import { EventDetails, Ticket } from '@/types/event';
 
 const formSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
@@ -56,7 +57,12 @@ const formSchema = z.object({
     .nonempty('At least one ticket type is required'),
 });
 
-const CreateEventPage = () => {
+interface EditEventFormProps {
+  event: EventDetails | undefined;
+  ticketTypes: Ticket[] | undefined;
+}
+
+const EditEventForm = ({ event, ticketTypes }: EditEventFormProps) => {
   const [modalOpen, setModalOpen] = useState(false);
   const { categories } = useCategories();
   const router = useRouter();
@@ -68,17 +74,17 @@ const CreateEventPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      category: '',
-      isFree: false,
+      name: event?.name || '',
+      category: event?.category?.id?.toString() || '',
+      isFree: event?.isFree || false,
       image: undefined,
-      startDate: '',
-      endDate: '',
-      startTime: '',
-      endTime: '',
-      location: '',
-      description: '',
-      ticketTypes: [],
+      startDate: event?.startDate,
+      endDate: event?.endDate,
+      startTime: event?.startTime,
+      endTime: event?.endTime,
+      location: event?.location,
+      description: event?.description,
+      ticketTypes: ticketTypes,
     },
   });
 
@@ -86,8 +92,7 @@ const CreateEventPage = () => {
     control: form.control,
     name: 'ticketTypes',
   });
-
-  console.log(form.formState.errors);
+  console.log(form.getValues('category'));
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -135,7 +140,6 @@ const CreateEventPage = () => {
       toast.error(error.message);
     }
   };
-
   return (
     <>
       <Form {...form}>
@@ -377,4 +381,4 @@ const CreateEventPage = () => {
   );
 };
 
-export default CreateEventPage;
+export default EditEventForm;
