@@ -31,6 +31,16 @@ import { useCategories } from '@/hooks/useCategories';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import LocationSelect from '@/components/LocationSelect';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const formSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters long'),
@@ -385,9 +395,26 @@ const CreateEventPage = () => {
                       className='bg-amber-500 p-2 rounded-s hover:opacity-75 transition'>
                       <Edit className='size-4 text-white' />
                     </button>
-                    <button className='bg-red-500 p-2 rounded-e hover:opacity-75 transition'>
-                      <Trash className='size-4 text-white' />
-                    </button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button className='bg-red-500 p-2 rounded-e hover:opacity-75 transition'>
+                          <Trash className='size-4 text-white' />
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you sure to delete this ticket?
+                          </AlertDialogTitle>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => remove(index)}>
+                            Continue
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </div>
               ))}

@@ -375,7 +375,7 @@ const EditEventForm = ({ event, ticketTypes }: EditEventFormProps) => {
       <CreateTicketModal
         isOpen={modalOpen}
         onClose={handleModalClose}
-        append={append}
+        onSubmit={(values) => {}}
       />
     </>
   );
