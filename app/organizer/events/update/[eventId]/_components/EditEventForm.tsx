@@ -125,11 +125,14 @@ const EditEventForm = ({ event, ticketTypes }: EditEventFormProps) => {
         });
       }
 
-      const response = await fetch('http://localhost:8080/api/v1/events', {
-        method: 'POST',
-        body: formData,
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/events`,
+        {
+          method: 'POST',
+          body: formData,
+          credentials: 'include',
+        }
+      );
       const result = await response.json();
       if (!response.ok) {
         throw new Error(result.message);

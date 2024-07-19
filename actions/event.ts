@@ -31,7 +31,7 @@ export const fetchEventById = async (
 export const fetchLocationDetails = async (locationCode: string) => {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/locations/regencies/${locationCode}`
+      `${process.env.NEXT_PUBLIC_API_URL}/locations/regencies/${locationCode}`
     );
     const result = await response.json();
     return result.data;
@@ -45,7 +45,7 @@ export const fetchTicketTypes = async (
 ): Promise<Ticket[] | undefined> => {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/events/${eventId}/tickets`
+      `${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}/tickets`
     );
     const result = await response.json();
     return result.data;

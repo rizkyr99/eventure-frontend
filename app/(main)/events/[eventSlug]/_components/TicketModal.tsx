@@ -40,7 +40,7 @@ const TicketModal = ({ session, eventId, isFree }: TicketModalProps) => {
     const fetchTickets = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/v1/events/${eventId}/tickets`
+          `${process.env.NEXT_PUBLIC_API_URL}/events/${eventId}/tickets`
         );
         if (!response.ok) {
           throw new Error('Failed to fetch tickets');
