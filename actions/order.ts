@@ -8,7 +8,13 @@ export const createOrder = async (data: any) => {
       body: JSON.stringify(data),
       credentials: 'include',
     });
+
+    if (!response.ok) {
+      throw new Error('Failed to create order');
+    }
+
     const result = await response.json();
+
     return result.data;
   } catch (error: any) {
     console.error(error);
