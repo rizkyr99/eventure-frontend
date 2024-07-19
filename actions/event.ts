@@ -1,4 +1,5 @@
-import { EventDetails, Ticket } from '@/types/event';
+import { EventDetails, EventSummary, Ticket } from '@/types/event';
+import { cookies } from 'next/headers';
 
 export const fetchEventDetails = async (
   eventSlug: string
@@ -51,5 +52,24 @@ export const fetchTicketTypes = async (
     return result.data;
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const fetchUserEvents = async (): Promise<
+  EventSummary[] | undefined
+> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/events`,
+      {
+        headers: {
+          Cookie: cookies().toString(),
+        },
+      }
+    );
+    const result = await response.json();
+    return result.data;
+  } catch (error) {
+    console.log(error);
   }
 };
